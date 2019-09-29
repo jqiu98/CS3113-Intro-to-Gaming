@@ -10,6 +10,9 @@
 #include "glm/mat4x4.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "ShaderProgram.h"
+#include "Player.h"
+#include "Ball.h"
+#include <random>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
@@ -21,46 +24,19 @@
 SDL_Window* displayWindow;
 bool gameIsRunning = true;
 
-ShaderProgram programTex, programUntex;
-glm::mat4 viewMatrix, projectionMatrix, stuffMatrix, player1Matrix, player2Matrix;
+ShaderProgram programUntex;
+glm::mat4 viewMatrix, projectionMatrix, modelMatrix;
 
-float p1X = -4.9f;
-float p1Y = 1.0f;
-float p2X = 4.9f;
-float p2Y = 1.0f;
+// Generate player paddles
+Player Player1 = Player(-4.75, 0, 1);
+Player Player2 = Player(4.75, 0, 2);
 
-float ballX;
-float ballY;
-
-bool winGame = false;
-
-GLuint xTextureID;
-
-GLuint LoadTexture(const char* filePath) {
-    int w, h, n;
-    unsigned char* image = stbi_load(filePath, &w, &h, &n, STBI_rgb_alpha);
-    
-    if (image == NULL) {
-        std::cout << "Unable to load image. Make sure the path is correct\n";
-        assert(false);
-    }
-    
-    GLuint textureID;
-    glGenTextures(1, &textureID);
-    glBindTexture(GL_TEXTURE_2D, textureID);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
-    
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    
-    stbi_image_free(image);
-    return textureID;
-}
-
+// Generate game ball
+Ball GameBall = Ball();
 
 void Initialize() {
     SDL_Init(SDL_INIT_VIDEO);
-    displayWindow = SDL_CreateWindow("Project 2", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, DISPLAY_WIDTH, DISPLAY_HEIGHT, SDL_WINDOW_OPENGL);
+    displayWindow = SDL_CreateWindow("Project 2: Pong", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, DISPLAY_WIDTH, DISPLAY_HEIGHT, SDL_WINDOW_OPENGL);
     SDL_GLContext context = SDL_GL_CreateContext(displayWindow);
     SDL_GL_MakeCurrent(displayWindow, context);
     
@@ -70,98 +46,102 @@ void Initialize() {
     
     glViewport(0, 0, DISPLAY_WIDTH, DISPLAY_HEIGHT);
     
-    programTex.Load("shaders/vertex_textured.glsl", "shaders/fragment_textured.glsl");
     programUntex.Load("shaders/vertex.glsl", "shaders/fragment.glsl");
-
+    
     viewMatrix = glm::mat4(1.0f);
     projectionMatrix = glm::ortho(-5.0f, 5.0f, -2.81f, 2.81f, -1.0f, 1.0f);
-    
-    player1Matrix = glm::mat4(1.0f);
-    player2Matrix = glm::mat4(1.0f);
-    
-    programTex.SetProjectionMatrix(projectionMatrix);
-    programTex.SetViewMatrix(viewMatrix);
-    programTex.SetColor(1.0f, 1.0f, 1.0f, 1.0f);
+    modelMatrix = glm::mat4(1.0f);
     
     programUntex.SetProjectionMatrix(projectionMatrix);
     programUntex.SetViewMatrix(viewMatrix);
     programUntex.SetColor(1.0f, 0.0f, 0.0f, 1.0f);
     
-    glUseProgram(programTex.programID);
-    
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     
-    float r = 255;
-    float g = 255;
-    float b = 255;
+    float r = 242;
+    float g = 232;
+    float b = 92;
     glClearColor(r/255.0f, g/255.0f, b/255.0f, 1.0f);
 }
 
 void ProcessInput() {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
-        if (event.type == SDL_QUIT || event.type == SDL_WINDOWEVENT_CLOSE) {
-            gameIsRunning = false;
+        switch (event.type) {
+            case SDL_QUIT:
+            case SDL_WINDOWEVENT_CLOSE:
+                gameIsRunning = false;
+                break;
         }
+    }
+    
+    // Reset players movement matrix
+    Player1.movement = glm::vec3(0, 0, 0);
+    Player2.movement = glm::vec3(0, 0, 0);
+    
+    if (GameBall.position.x > -4.85 && GameBall.position.x < 4.85) { // Ball within x-cords of screen
+        const Uint8 *keys = SDL_GetKeyboardState(NULL);
+        
+         // Update Player 1 movement: Keys W & S
+        if (keys[SDL_SCANCODE_W] && Player1.position.y < 2.06) Player1.movement.y += 1.0f;
+        else if (keys[SDL_SCANCODE_S] && Player1.position.y > -2.06) Player1.movement.y -= 1.0f;
+        
+        // Update Player 2 movement: Keys UP & DOWN
+        if (keys[SDL_SCANCODE_UP] && Player2.position.y < 2.06) Player2.movement.y += 1.0f;
+        else if (keys[SDL_SCANCODE_DOWN] && Player2.position.y > -2.06) Player2.movement.y -= 1.0f;
+    }
+    else { // Game ended
+        GameBall.movement = glm::vec3(0, 0, 0); // Stop the ball
+    }
+    
+    // Keeps ball within y-cord of screen, extra 0.1 padding just in case
+    if (GameBall.position.y > 2.66 || GameBall.position.y < -2.66) {
+        GameBall.movement.y = -GameBall.movement.y;
+    }
+    
+    // Collision Control between: Player1 & ball, Player2 & ball;
+    float xDistP1 = fabs(Player1.position.x - GameBall.position.x) - ((0.3 + 0.3) / 2.0f);
+    float yDistP1 = fabs(Player1.position.y - GameBall.position.y) - ((1.5 + 0.3) / 2.0f);
+    
+    float xDistP2 = fabs(Player2.position.x - GameBall.position.x) - ((0.3 + 0.3) / 2.0f);
+    float yDistP2 = fabs(Player2.position.y - GameBall.position.y) - ((1.5 + 0.3) / 2.0f);
+    
+    if (xDistP1 < 0 && yDistP1 < 0) {
+        GameBall.movement.x = -GameBall.movement.x;
+        GameBall.colorMode = 1;
+    }
+    else if (xDistP2 < 0 && yDistP2 < 0) {
+        GameBall.movement.x = -GameBall.movement.x;
+        GameBall.colorMode = 2;
     }
 }
 
+float lastTicks = 0;
 
 void Update() {
-}
-
-
-void drawPlayer1() {
-    float vertices[] = {
-        p1X, p1Y,
-        p1X, p1Y-1.5f,
-        p1X+0.3f, p1Y-1.5f,
-        p1X+0.3f, p1Y };
+    float ticks = (float)SDL_GetTicks() / 1000.0f;
+    float deltaTime = ticks - lastTicks;
+    lastTicks = ticks;
     
-    glVertexAttribPointer(programUntex.positionAttribute, 2, GL_FLOAT, false, 0, vertices);
-    glEnableVertexAttribArray(programUntex.positionAttribute);
-    float r = 255;
-    float g = 0;
-    float b = 0;
-    programUntex.SetColor(r/255.0f, g/255.0f, b/255.0f, 1.0f);
-    programUntex.SetModelMatrix(player1Matrix);
-    glDrawArrays(GL_QUADS, 0, 4);
-    
-    glDisableVertexAttribArray(programUntex.positionAttribute);
-}
-
-void drawPlayer2() {
-    float vertices[] = {
-        p2X, p2Y,
-        p2X, p2Y-1.5f,
-        p2X-0.3f, p2Y-1.5f,
-        p2X-0.3f, p2Y };
-    
-    glVertexAttribPointer(programUntex.positionAttribute, 2, GL_FLOAT, false, 0, vertices);
-    glEnableVertexAttribArray(programUntex.positionAttribute);
-    float r = 255;
-    float g = 0;
-    float b = 0;
-    programUntex.SetColor(r/255.0f, g/255.0f, b/255.0f, 1.0f);
-    programUntex.SetModelMatrix(player1Matrix);
-    glDrawArrays(GL_QUADS, 0, 4);
-    
-    glDisableVertexAttribArray(programUntex.positionAttribute);
+    Player1.Update(deltaTime);
+    Player2.Update(deltaTime);
+    GameBall.Update(deltaTime);
 }
 
 void Render() {
     glClear(GL_COLOR_BUFFER_BIT);
-    drawPlayer1();
-    drawPlayer2();
+    
+    Player1.Render(&programUntex);
+    Player2.Render(&programUntex);
+    GameBall.Render(&programUntex);
+    
     SDL_GL_SwapWindow(displayWindow);
 }
-
 
 void Shutdown() {
     SDL_Quit();
 }
-
 
 int main(int argc, char* argv[]) {
     Initialize();
