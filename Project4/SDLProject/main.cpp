@@ -299,15 +299,15 @@ void ProcessInput() {
         }
         state.player.velocity.x = 0;
         
-        // Check for pressed/held keys below
+        // Check for pressed/held keys below & making sure we stay within screen boundary
         const Uint8 *keys = SDL_GetKeyboardState(NULL);
         
-        if (keys[SDL_SCANCODE_LEFT])
+        if (keys[SDL_SCANCODE_LEFT] && state.player.position.x > -5.0f + state.player.width/2)
         {
             state.player.velocity.x = -3.0f;
             state.player.direction = -1.0f;
         }
-        else if  (keys[SDL_SCANCODE_RIGHT])
+        else if  (keys[SDL_SCANCODE_RIGHT] && state.player.position.x < 5.0f + state.player.width/2)
         {
             state.player.velocity.x = 3.0f;
             state.player.direction = 1.0f;
