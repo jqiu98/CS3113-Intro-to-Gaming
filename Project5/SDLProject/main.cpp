@@ -66,7 +66,7 @@ void Initialize() {
     sceneList[0] = new Level1();
     sceneList[1] = new Level2();
     sceneList[2] = new Level3();
-    SwitchToScene(sceneList[1]);
+    SwitchToScene(sceneList[0]);
 }
 
 void ProcessInput() {
