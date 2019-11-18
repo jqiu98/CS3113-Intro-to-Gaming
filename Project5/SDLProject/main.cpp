@@ -18,9 +18,10 @@
 #include "Level1.h"
 #include "Level2.h"
 #include "Level3.h"
+#include "GameMenu.h"
 
 Scene *currentScene;
-Scene *sceneList[3];
+Scene *sceneList[4];
 
 void SwitchToScene(Scene *scene) {
     currentScene = scene;
@@ -29,6 +30,7 @@ void SwitchToScene(Scene *scene) {
 
 SDL_Window* displayWindow;
 bool gameIsRunning = true;
+bool GameStart = false;
 
 ShaderProgram program;
 glm::mat4 viewMatrix, modelMatrix, projectionMatrix;
@@ -63,9 +65,10 @@ void Initialize() {
     
     glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
     
-    sceneList[0] = new Level1();
-    sceneList[1] = new Level2();
-    sceneList[2] = new Level3();
+    sceneList[0] = new GameMenu();
+    sceneList[1] = new Level1();
+    sceneList[2] = new Level2();
+    sceneList[3] = new Level3();
     SwitchToScene(sceneList[0]);
 }
 
@@ -81,7 +84,11 @@ void ProcessInput() {
             case SDL_KEYDOWN:
                 switch (event.key.keysym.sym) {
                     case SDLK_SPACE:
-                        currentScene->state.player.Jump();
+                        if (!GameStart) {
+                            GameStart = true;
+                            SwitchToScene(sceneList[1]);
+                        }
+                        else currentScene->state.player.Jump();
                         break;
                         
                 }

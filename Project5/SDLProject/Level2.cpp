@@ -81,7 +81,7 @@ void Level2::Update(float deltaTime) {
             break;
         }
     }
-    if (!coinsLeft) state.nextLevel = 2;
+    if (!coinsLeft) state.nextLevel = 3;
 }
 
 void Level2::Render(ShaderProgram *program) {

@@ -32,7 +32,7 @@ void Level1::Initialize() {
     state.player.entityType = PLAYER;
     state.player.isStatic = false;
     state.player.isActive = true;
-    state.player.position = glm::vec3(5, -9, 0);
+    state.player.position = glm::vec3(5, -12, 0);
     state.player.acceleration = glm::vec3(0, -22.0f, 0);
     state.player.textureID = Util::LoadTexture("george.png");
     state.player.cols = 4;
@@ -79,7 +79,7 @@ void Level1::Update(float deltaTime) {
             break;
         }
     }
-    if (!coinsLeft) state.nextLevel = 1;
+    if (!coinsLeft) state.nextLevel = 2;
     
 }
 

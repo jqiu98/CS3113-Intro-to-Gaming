@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B2439F2F2382ED660022DAD3 /* GameMenu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B2439F2D2382ED660022DAD3 /* GameMenu.cpp */; };
 		B25E77EE238277D600BE0A8B /* font1.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = B25E77ED238277D500BE0A8B /* font1.png */; };
 		B25E77F423829B6D00BE0A8B /* Scene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B25E77F223829B6D00BE0A8B /* Scene.cpp */; };
 		B25E77F723829C7100BE0A8B /* Level1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B25E77F523829C7100BE0A8B /* Level1.cpp */; };
@@ -48,6 +49,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		B2439F2D2382ED660022DAD3 /* GameMenu.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GameMenu.cpp; sourceTree = "<group>"; };
+		B2439F2E2382ED660022DAD3 /* GameMenu.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GameMenu.h; sourceTree = "<group>"; };
 		B25E77ED238277D500BE0A8B /* font1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = font1.png; sourceTree = "<group>"; };
 		B25E77F223829B6D00BE0A8B /* Scene.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Scene.cpp; sourceTree = "<group>"; };
 		B25E77F323829B6D00BE0A8B /* Scene.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Scene.h; sourceTree = "<group>"; };
@@ -122,6 +125,8 @@
 				B25E77ED238277D500BE0A8B /* font1.png */,
 				DB233D0E23661A3D008B1DEB /* tileset.png */,
 				FAD69120234B8AEC00D9AA86 /* me.png */,
+				B2439F2D2382ED660022DAD3 /* GameMenu.cpp */,
+				B2439F2E2382ED660022DAD3 /* GameMenu.h */,
 				B25E77F523829C7100BE0A8B /* Level1.cpp */,
 				B25E77F82382A20200BE0A8B /* Level2.cpp */,
 				B25E77FB2382A41000BE0A8B /* Level3.cpp */,
@@ -220,6 +225,7 @@
 				B25E77FD2382A41000BE0A8B /* Level3.cpp in Sources */,
 				DB233D1223661B3D008B1DEB /* Map.cpp in Sources */,
 				DBDF1B5E2323DE8D007CECB1 /* ShaderProgram.cpp in Sources */,
+				B2439F2F2382ED660022DAD3 /* GameMenu.cpp in Sources */,
 				B25E77FA2382A20200BE0A8B /* Level2.cpp in Sources */,
 				B2705CE323821D2500E5FF99 /* Util.cpp in Sources */,
 				B25E77F723829C7100BE0A8B /* Level1.cpp in Sources */,
