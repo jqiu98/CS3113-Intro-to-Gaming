@@ -156,8 +156,8 @@ void Entity::Jump()
 {
     if (collidedBottom)
     {
-        if (entityType == PLAYER) velocity.y = 10.5f;
-        else velocity.y = 8.5f;
+        if (entityType == PLAYER) velocity.y = 11.5f;
+        else velocity.y = 7.5f;
     }
 }
 

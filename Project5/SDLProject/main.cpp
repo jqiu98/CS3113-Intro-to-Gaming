@@ -110,7 +110,7 @@ void ProcessInput() {
                     case SDLK_SPACE:
                         if (!GameStart) {
                             GameStart = true;
-                            SwitchToScene(sceneList[1]);
+                            SwitchToScene(sceneList[3]);
                         }
                         else {
                             currentScene->state.player.Jump();
