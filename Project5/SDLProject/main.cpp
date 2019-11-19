@@ -10,6 +10,7 @@
 #include "glm/mat4x4.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "ShaderProgram.h"
+#include "SDL_mixer.h"
 
 #include "Entity.h"
 #include "Map.h"
@@ -20,30 +21,41 @@
 #include "Level3.h"
 #include "GameMenu.h"
 
-Scene *currentScene;
-Scene *sceneList[4];
-
-void SwitchToScene(Scene *scene) {
-    currentScene = scene;
-    currentScene->Initialize();
-}
-
 SDL_Window* displayWindow;
 bool gameIsRunning = true;
 bool GameStart = false;
+
+
+Scene *currentScene;
+Scene *sceneList[4];
+
+int lives;
+
+Mix_Music *background;
+Mix_Chunk *jump;
+
+
+
+void SwitchToScene(Scene *scene) {
+    if (GameStart) lives = currentScene->state.lives;
+    currentScene = scene;
+    currentScene->Initialize();
+    currentScene->state.lives = lives;
+}
 
 ShaderProgram program;
 glm::mat4 viewMatrix, modelMatrix, projectionMatrix;
 
 void Initialize() {
-    SDL_Init(SDL_INIT_VIDEO);
-    displayWindow = SDL_CreateWindow("Platformer!", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, SDL_WINDOW_OPENGL);
+    SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
+    displayWindow = SDL_CreateWindow("Project_5", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, SDL_WINDOW_OPENGL);
     SDL_GLContext context = SDL_GL_CreateContext(displayWindow);
     SDL_GL_MakeCurrent(displayWindow, context);
     
 #ifdef _WINDOWS
     glewInit();
 #endif
+    Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 4096);
     
     glViewport(0, 0, 640, 480);
     
@@ -65,11 +77,23 @@ void Initialize() {
     
     glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
     
+    lives = 3;
     sceneList[0] = new GameMenu();
     sceneList[1] = new Level1();
     sceneList[2] = new Level2();
     sceneList[3] = new Level3();
     SwitchToScene(sceneList[0]);
+    
+    Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 4096);
+    background = Mix_LoadMUS("backgroundSneak.mp3");
+    jump = Mix_LoadWAV("bounce.wav");
+    
+    Mix_PlayMusic(background, -1);
+    Mix_Volume(-1, MIX_MAX_VOLUME);
+}
+
+void playJump() {
+    Mix_PlayChannel(-1, jump, 0);
 }
 
 void ProcessInput() {
@@ -88,7 +112,10 @@ void ProcessInput() {
                             GameStart = true;
                             SwitchToScene(sceneList[1]);
                         }
-                        else currentScene->state.player.Jump();
+                        else {
+                            currentScene->state.player.Jump();
+                            playJump();
+                        }
                         break;
                         
                 }
@@ -158,6 +185,9 @@ void Render() {
 }
 
 void Shutdown() {
+    
+    Mix_FreeChunk(jump);
+    Mix_FreeMusic(background);
     SDL_Quit();
 }
 

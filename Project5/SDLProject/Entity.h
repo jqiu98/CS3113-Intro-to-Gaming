@@ -13,7 +13,7 @@
 
 #include "Map.h"
 
-enum  EntityType { PLAYER, ENEMY, COIN, PLAYER_BULLET, ENEMY_BULLET};
+enum  EntityType { PLAYER, ENEMY, COIN};
 
 
 class Entity {
@@ -45,9 +45,14 @@ public:
     int animIndex;
     float animTime;
     
+    bool loseLife;
+    bool canJump;
+    
     Entity();
     
     bool CheckCollision(Entity *other);
+    
+    void CheckDistanceToPlayer(Entity player);
     
     void CheckCollisionsX(Entity *objects, int objectCount);
     void CheckCollisionsY(Entity *objects, int objectCount);
@@ -55,7 +60,7 @@ public:
     void CheckCollisionsX(Map *map);
     void CheckCollisionsY(Map *map);
     
-    void Update(float deltaTime, Entity *coins, int coinCount, Map *map);
+    void Update(float deltaTime, Entity *enemies, int enemyCount, Entity *coins, int coinCount, Map *map);
     void Render(ShaderProgram *program);
     void RenderAnim(ShaderProgram *program);
     

@@ -12,6 +12,19 @@ Entity::Entity()
     animTime = 0;
     animIndex = 0;
     direction = 0;
+    
+    loseLife = false;
+    canJump = true;
+}
+
+void Entity::CheckDistanceToPlayer(Entity player) {
+    float xdist = abs(player.position.x - position.x);
+    if (!canJump && xdist < 6) {
+        if (player.position.x > position.x) velocity.x = 2.5;
+        else velocity.x = -2.5;
+        Jump();
+    }
+    else velocity.x = 0;
 }
 
 bool Entity::CheckCollision(Entity *other)
@@ -35,6 +48,7 @@ bool Entity::CheckCollision(Entity *other)
     return false;
 }
 
+
 void Entity::CheckCollisionsY(Entity *objects, int objectCount)
 {
     for (int i = 0; i < objectCount; i++)
@@ -45,17 +59,13 @@ void Entity::CheckCollisionsY(Entity *objects, int objectCount)
         {
             if (entityType == PLAYER && object.entityType == COIN) continue;
             
-            float ydist = fabs(position.y - object.position.y);
-            float penetrationY = fabs(ydist - (height / 2) - (object.height / 2));
             if (velocity.y > 0) {
-                position.y -= penetrationY;
-                velocity.y = 0;
                 collidedTop = true;
+                loseLife = true;
             }
             else if (velocity.y < 0) {
-                position.y += penetrationY;
-                velocity.y = 0;
                 collidedBottom = true;
+                objects[i].isActive = false;
             }
         }
     }
@@ -71,18 +81,14 @@ void Entity::CheckCollisionsX(Entity *objects, int objectCount)
         {
             if (entityType == PLAYER && object.entityType == COIN) continue;
             
-            float xdist = fabs(position.x - object.position.x);
-            float penetrationX = fabs(xdist - (width / 2) - (object.width / 2));
+            loseLife = true;
             if (velocity.x > 0) {
-                position.x -= penetrationX;
-                velocity.x = 0;
                 collidedRight = true;
             }
             else if (velocity.x < 0) {
-                position.x += penetrationX;
-                velocity.x = 0;
                 collidedLeft = true;
             }
+            if (entityType == ENEMY) velocity.x *= -1.0f;
         }
     }
 }
@@ -132,14 +138,17 @@ void Entity::CheckCollisionsX(Map *map)
     
     if (map->IsSolid(left, &penetration_x, &penetration_y) && velocity.x < 0) {
         position.x += penetration_x;
-        velocity.x = 0;
         collidedLeft = true;
+        if (entityType == ENEMY) velocity.x *= -1;
+        else velocity.x = 0;
     }
     
     if(map->IsSolid(right, &penetration_x, &penetration_y) && velocity.x > 0) {
         position.x -= penetration_x;
-        velocity.x = 0;
         collidedRight = true;
+        if (entityType == ENEMY) velocity.x *= -1;
+        else velocity.x = 0;
+
     }
 }
 
@@ -147,31 +156,39 @@ void Entity::Jump()
 {
     if (collidedBottom)
     {
-        velocity.y = 10.0f;
+        if (entityType == PLAYER) velocity.y = 10.5f;
+        else velocity.y = 8.5f;
     }
 }
 
 
 
 
-void Entity::Update(float deltaTime, Entity *coins, int coinCount, Map *map)
+void Entity::Update(float deltaTime, Entity *enemies, int enemyCount, Entity *coins, int coinCount, Map *map)
 {
+    
+    if (entityType == ENEMY && canJump) Jump();
+
     collidedTop = false;
     collidedBottom = false;
     collidedLeft = false;
     collidedRight = false;
     
+    
     velocity += acceleration * deltaTime;
     
     position.y += velocity.y * deltaTime;        // Move on Y
+    
     CheckCollisionsY(map);
+    CheckCollisionsY(enemies, enemyCount);    // Fix if needed
     CheckCollisionsY(coins, coinCount);    // Fix if needed
 
+    if (entityType == ENEMY) position.x += velocity.x * deltaTime * direction;
+    else position.x += velocity.x * deltaTime;        // Move on X
     
-    position.x += velocity.x * deltaTime;        // Move on X
     CheckCollisionsX(map);
+    CheckCollisionsX(enemies, enemyCount);    // Fix if needed
     CheckCollisionsX(coins, coinCount);    // Fix if needed
-
     
     animTime += deltaTime;
     if (animTime >= 0.25f) {

@@ -17,13 +17,16 @@
 
 
 #define MAX_COIN_COUNT 100
+#define MAX_ENEMIES 100
 
 
 struct GameState {
     Entity player;
     Entity coins[MAX_COIN_COUNT];
+    Entity enemies[MAX_ENEMIES];
     Map *map;
     int nextLevel;
+    int lives;
 };
 
 class Scene {

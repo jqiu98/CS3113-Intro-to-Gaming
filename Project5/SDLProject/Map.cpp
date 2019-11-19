@@ -19,7 +19,7 @@ void Map::Build()
         for(int x = 0; x < this->width; x++) {
             
             int tile = levelData[y * width + x];
-            if (tile == 0 || tile == 4 || tile == 9) continue;
+            if (tile == 0 || tile == 4 || tile == 5 || tile == 7) continue;
             
             float u = (float)(tile % tile_count_x) / (float)tile_count_x;
             float v = (float)(tile / tile_count_x) / (float)tile_count_y;
@@ -94,7 +94,7 @@ bool Map::IsSolid(glm::vec3 position, float *penetration_x, float *penetration_y
     if (tile_x < 0 || tile_y >= height) return false;
     
     int tile = levelData[tile_y * width + tile_x];
-    if (tile == 0 || tile == 9) return false;
+    if (tile == 0 || tile == 4 || tile == 5 || tile == 7) return false;
     
     float tile_center_x  = (tile_x * tile_size);
     float tile_center_y = -(tile_y * tile_size);

@@ -6,7 +6,7 @@
 
 unsigned int menu_data[] =
 {
-    0, 0, 0, 9, 9, 0,
+    0, 0, 0, 7, 7, 0,
     1, 1, 1, 1, 1, 1
 };
 
@@ -29,12 +29,14 @@ void GameMenu::Initialize() {
     state.player.animRightIndices = new int[4] {3, 7, 11, 15};
     state.nextLevel = -1;
     
+    state.lives = 3;
+    
     GLuint coinTextureID = Util::LoadTexture("coin.png");
     int levelCoins = 0;
     
     for (int y = 0; y < MENU_HEIGHT; y++) {
         for (int x = 0; x < MENU_WIDTH; x++) {
-            if (menu_data[y * MENU_WIDTH + x] == 9) {
+            if (menu_data[y * MENU_WIDTH + x] == 7) {
                 state.coins[levelCoins].entityType = COIN;
                 state.coins[levelCoins].isStatic = false;
                 state.coins[levelCoins].isActive = true;
@@ -53,6 +55,7 @@ void GameMenu::Initialize() {
     }
 }
 
+
 void GameMenu::Update(float deltaTime) {}
 
 void GameMenu::Render(ShaderProgram *program) {
@@ -62,5 +65,6 @@ void GameMenu::Render(ShaderProgram *program) {
         if (state.coins[i].isActive) state.coins[i].Render(program);
     }
     GLuint fontTextureID = Util::LoadTexture("font1.png");
-    Util::DrawText(program, fontTextureID, "SPACEBAR TO START", 1.0f, -0.5f, glm::vec3(state.player.position.x -4, state.player.position.y + 2, 0));
+    Util::DrawText(program, fontTextureID, "Unforgivable Coin Game", 0.8f, -0.4f, glm::vec3(state.player.position.x -4, state.player.position.y + 2, 0));
+    Util::DrawText(program, fontTextureID, "SPACEBAR TO START", 0.5f, -0.2f, glm::vec3(state.player.position.x -2, state.player.position.y + 0.5, 0));
 }
