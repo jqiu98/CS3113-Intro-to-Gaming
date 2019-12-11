@@ -8,6 +8,18 @@
 
 /* Begin PBXBuildFile section */
 		B29BF1FF23971DF400DA25C0 /* playerShip.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = B29BF1FE23971DF400DA25C0 /* playerShip.png */; };
+		B2A0674223A0B6D4001339E4 /* Scene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B2A0674023A0B6D4001339E4 /* Scene.cpp */; };
+		B2A0674523A0B73D001339E4 /* Util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B2A0674323A0B73D001339E4 /* Util.cpp */; };
+		B2A0674823A0BF3B001339E4 /* GameMenu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B2A0674623A0BF3B001339E4 /* GameMenu.cpp */; };
+		B2A0674E23A0C147001339E4 /* Level1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B2A0674C23A0C147001339E4 /* Level1.cpp */; };
+		B2A0675023A0C756001339E4 /* font1.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = B2A0674F23A0C756001339E4 /* font1.png */; };
+		B2A0675223A0DCC3001339E4 /* playerLife3_blue.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = B2A0675123A0DCC3001339E4 /* playerLife3_blue.png */; };
+		B2A0675423A0DD37001339E4 /* enemyBlack1.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = B2A0675323A0DD37001339E4 /* enemyBlack1.png */; };
+		B2A0675623A0DDB5001339E4 /* laserBlue16.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = B2A0675523A0DDB4001339E4 /* laserBlue16.png */; };
+		B2A0675823A0DDCE001339E4 /* laserRed03.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = B2A0675723A0DDCE001339E4 /* laserRed03.png */; };
+		B2CB0B0423A139F000C2F4B1 /* SDL_mixer.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B2CB0B0323A139EF00C2F4B1 /* SDL_mixer.h */; };
+		B2CB0B0623A13BD900C2F4B1 /* backgroundSpace.mp3 in CopyFiles */ = {isa = PBXBuildFile; fileRef = B2CB0B0523A13BD900C2F4B1 /* backgroundSpace.mp3 */; };
+		B2CB0B0A23A13C5600C2F4B1 /* gunShoot.wav in CopyFiles */ = {isa = PBXBuildFile; fileRef = B2CB0B0923A13C5500C2F4B1 /* gunShoot.wav */; };
 		B2FC1FF623669BDE002CB827 /* playerLaser.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = B2FC1FF523669BDD002CB827 /* playerLaser.png */; };
 		DBDF1B532323DE3F007CECB1 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DBDF1B522323DE3F007CECB1 /* main.cpp */; };
 		DBDF1B5E2323DE8D007CECB1 /* ShaderProgram.cpp in Sources */ = {isa = PBXBuildFile; fileRef = DBDF1B5D2323DE8D007CECB1 /* ShaderProgram.cpp */; };
@@ -27,7 +39,15 @@
 			dstPath = "";
 			dstSubfolderSpec = 6;
 			files = (
+				B2CB0B0A23A13C5600C2F4B1 /* gunShoot.wav in CopyFiles */,
+				B2A0675823A0DDCE001339E4 /* laserRed03.png in CopyFiles */,
+				B2A0675623A0DDB5001339E4 /* laserBlue16.png in CopyFiles */,
+				B2CB0B0623A13BD900C2F4B1 /* backgroundSpace.mp3 in CopyFiles */,
+				B2CB0B0423A139F000C2F4B1 /* SDL_mixer.h in CopyFiles */,
+				B2A0675223A0DCC3001339E4 /* playerLife3_blue.png in CopyFiles */,
+				B2A0675023A0C756001339E4 /* font1.png in CopyFiles */,
 				B29BF1FF23971DF400DA25C0 /* playerShip.png in CopyFiles */,
+				B2A0675423A0DD37001339E4 /* enemyBlack1.png in CopyFiles */,
 				B2FC1FF623669BDE002CB827 /* playerLaser.png in CopyFiles */,
 				DBDF1B612323DE9E007CECB1 /* shaders in CopyFiles */,
 			);
@@ -37,6 +57,22 @@
 
 /* Begin PBXFileReference section */
 		B29BF1FE23971DF400DA25C0 /* playerShip.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = playerShip.png; sourceTree = "<group>"; };
+		B2A0674023A0B6D4001339E4 /* Scene.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Scene.cpp; sourceTree = "<group>"; };
+		B2A0674123A0B6D4001339E4 /* Scene.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Scene.h; sourceTree = "<group>"; };
+		B2A0674323A0B73D001339E4 /* Util.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Util.cpp; sourceTree = "<group>"; };
+		B2A0674423A0B73D001339E4 /* Util.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Util.h; sourceTree = "<group>"; };
+		B2A0674623A0BF3B001339E4 /* GameMenu.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GameMenu.cpp; sourceTree = "<group>"; };
+		B2A0674723A0BF3B001339E4 /* GameMenu.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GameMenu.h; sourceTree = "<group>"; };
+		B2A0674C23A0C147001339E4 /* Level1.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Level1.cpp; sourceTree = "<group>"; };
+		B2A0674D23A0C147001339E4 /* Level1.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Level1.h; sourceTree = "<group>"; };
+		B2A0674F23A0C756001339E4 /* font1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = font1.png; sourceTree = "<group>"; };
+		B2A0675123A0DCC3001339E4 /* playerLife3_blue.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = playerLife3_blue.png; sourceTree = "<group>"; };
+		B2A0675323A0DD37001339E4 /* enemyBlack1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = enemyBlack1.png; sourceTree = "<group>"; };
+		B2A0675523A0DDB4001339E4 /* laserBlue16.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = laserBlue16.png; sourceTree = "<group>"; };
+		B2A0675723A0DDCE001339E4 /* laserRed03.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = laserRed03.png; sourceTree = "<group>"; };
+		B2CB0B0323A139EF00C2F4B1 /* SDL_mixer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SDL_mixer.h; path = ../Project5/SDLProject/SDL_mixer.h; sourceTree = "<group>"; };
+		B2CB0B0523A13BD900C2F4B1 /* backgroundSpace.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = backgroundSpace.mp3; sourceTree = "<group>"; };
+		B2CB0B0923A13C5500C2F4B1 /* gunShoot.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = gunShoot.wav; sourceTree = "<group>"; };
 		B2FC1FF523669BDD002CB827 /* playerLaser.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = playerLaser.png; sourceTree = "<group>"; };
 		DBDF1B4F2323DE3F007CECB1 /* Final */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Final; sourceTree = BUILT_PRODUCTS_DIR; };
 		DBDF1B522323DE3F007CECB1 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
@@ -73,6 +109,13 @@
 		DBDF1B462323DE3F007CECB1 = {
 			isa = PBXGroup;
 			children = (
+				B2CB0B0923A13C5500C2F4B1 /* gunShoot.wav */,
+				B2CB0B0523A13BD900C2F4B1 /* backgroundSpace.mp3 */,
+				B2CB0B0323A139EF00C2F4B1 /* SDL_mixer.h */,
+				B2A0675723A0DDCE001339E4 /* laserRed03.png */,
+				B2A0675523A0DDB4001339E4 /* laserBlue16.png */,
+				B2A0675323A0DD37001339E4 /* enemyBlack1.png */,
+				B2A0675123A0DCC3001339E4 /* playerLife3_blue.png */,
 				DBDF1B512323DE3F007CECB1 /* SDLProject */,
 				DBDF1B502323DE3F007CECB1 /* Products */,
 				DBDF1B5F2323DE92007CECB1 /* Frameworks */,
@@ -90,6 +133,7 @@
 		DBDF1B512323DE3F007CECB1 /* SDLProject */ = {
 			isa = PBXGroup;
 			children = (
+				B2A0674F23A0C756001339E4 /* font1.png */,
 				B29BF1FE23971DF400DA25C0 /* playerShip.png */,
 				B2FC1FF523669BDD002CB827 /* playerLaser.png */,
 				FAD6911D234B8AE400D9AA86 /* Entity.cpp */,
@@ -99,7 +143,15 @@
 				DBDF1B592323DE8D007CECB1 /* ShaderProgram.h */,
 				DBDF1B5C2323DE8D007CECB1 /* shaders */,
 				DBDF1B5A2323DE8D007CECB1 /* stb_image.h */,
+				B2A0674C23A0C147001339E4 /* Level1.cpp */,
+				B2A0674D23A0C147001339E4 /* Level1.h */,
 				DBDF1B522323DE3F007CECB1 /* main.cpp */,
+				B2A0674623A0BF3B001339E4 /* GameMenu.cpp */,
+				B2A0674723A0BF3B001339E4 /* GameMenu.h */,
+				B2A0674023A0B6D4001339E4 /* Scene.cpp */,
+				B2A0674123A0B6D4001339E4 /* Scene.h */,
+				B2A0674323A0B73D001339E4 /* Util.cpp */,
+				B2A0674423A0B73D001339E4 /* Util.h */,
 			);
 			path = SDLProject;
 			sourceTree = "<group>";
@@ -172,9 +224,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B2A0674223A0B6D4001339E4 /* Scene.cpp in Sources */,
 				DBDF1B532323DE3F007CECB1 /* main.cpp in Sources */,
 				FAD6911E234B8AE400D9AA86 /* Entity.cpp in Sources */,
 				DBDF1B5E2323DE8D007CECB1 /* ShaderProgram.cpp in Sources */,
+				B2A0674823A0BF3B001339E4 /* GameMenu.cpp in Sources */,
+				B2A0674523A0B73D001339E4 /* Util.cpp in Sources */,
+				B2A0674E23A0C147001339E4 /* Level1.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

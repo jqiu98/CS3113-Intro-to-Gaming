@@ -2,13 +2,13 @@
 
 Entity::Entity()
 {
-    entityType = PLATFORM;
-    isStatic = true;
-    isActive = true;
+    entityType = PLAYER;
+    isStatic = false;
+    isActive = false;
     position = glm::vec3(0);
     width = 1;
     height = 1;
-    direction = 1;
+    life = 1;
 }
 
 bool Entity::CheckCollision(Entity *other)
@@ -21,95 +21,110 @@ bool Entity::CheckCollision(Entity *other)
 
     if (xdist < 0 && ydist < 0)
     {
-        // For bullets that it platforms/terrain
-        if ((entityType == PLAYER_BULLET || entityType == ENEMY_BULLET) && other->entityType == PLATFORM) {
-            isActive = false;
+        if (entityType == PLAYER && other->entityType == ENEMY) {
+            life--;
+            other->life = 0;
+            other->UpdateAlive();
         }
-        
-        // For every collision not involving platforms/terrain
-        else if (other->entityType != PLATFORM ) {
+        else if ((entityType == PLAYER && other->entityType == ENEMY_BULLET) ||
+                 (entityType == ENEMY && other->entityType == PLAYER_BULLET)) {
+            life--;
+            other->isActive = false;
+            
+        }
+        else if ((entityType == ENEMY_BULLET && other->entityType == PLAYER) ||
+                 (entityType == PLAYER_BULLET && other->entityType == ENEMY)) {
+            isActive = false;
+            other->life--;
+            other->UpdateAlive();
+        }
+        else if (entityType != other->entityType) {
             isActive = false;
             other->isActive = false;
         }
         return true;
     }
-    
     return false;
 }
 
-void Entity::CheckCollisionsY(Entity *platforms, int platformCount, Entity *others, int otherCount)
+void Entity::CheckCollisionsY(Entity *player, Entity *others, int otherCount)
 {
-    for (int i = 0; i < platformCount; i++)
+    for (int i = 0; i < otherCount; i++)
     {
-        if (CheckCollision(&platforms[i]))
-        {
-            float ydist = fabs(position.y - platforms[i].position.y);
-            float penetrationY = fabs(ydist - (height / 2) - (platforms[i].height / 2));
-            if (velocity.y > 0) {
-                position.y -= penetrationY;
-                velocity.y = 0;
-                collidedTop = true;
+        if (&others[i] == this) continue;
+        if (CheckCollision(&others[i])) {
+            if (others[i].entityType == PLAYER_BULLET) {
+                player->killCount += 1;
             }
-            else if (velocity.y < 0) {
-                position.y += penetrationY;
-                velocity.y = 0;
-                collidedBottom = true;
+             if (entityType == others[i].entityType) {
+                float ydist = fabs(position.y - others[i].position.y);
+                float penetrationY = fabs(ydist - (height / 2) - (others[i].height / 2));
+                if (velocity.y > 0) {
+                    position.y -= penetrationY;
+                    velocity.y = 0;
+                }
+                else if (velocity.y < 0) {
+                    position.y += penetrationY;
+                    velocity.y = 0;
+                }
+             }
+        }
+    }
+}
+
+void Entity::CheckCollisionsX(Entity *player, Entity *others, int otherCount)
+{
+    for (int i = 0; i < otherCount; i++)
+    {
+        if (&others[i] == this) continue;
+        if (CheckCollision(&others[i])) {
+            if (others[i].entityType == PLAYER_BULLET) player->killCount += 1;
+            if (entityType == others[i].entityType) {
+                float xdist = fabs(position.x - others[i].position.x);
+                float penetrationX = fabs(xdist - (width / 2) - (others[i].width / 2));
+                if (velocity.x > 0) {
+                    position.x -= penetrationX;
+                }
+                else if (velocity.x < 0) {
+                    position.x += penetrationX;
+                }
             }
         }
     }
-    for (int i = 0; i < otherCount; i++) CheckCollision(&others[i]); // Checking against non-platforms
 }
 
-void Entity::CheckCollisionsX(Entity *platforms, int platformCount, Entity *others, int otherCount)
-{
-    for (int i = 0; i < platformCount; i++)
-    {
-        if (CheckCollision(&platforms[i]))
-        {
-            float xdist = fabs(position.x - platforms[i].position.x);
-            float penetrationX = fabs(xdist - (width / 2) - (platforms[i].width / 2));
-            if (velocity.x > 0) {
-                position.x -= penetrationX;
-                collidedRight = true;
-            }
-            else if (velocity.x < 0) {
-                position.x += penetrationX;
-                collidedLeft = true;
-            }
-            if (entityType == ENEMY) velocity.x *= -1.0f;
-            else velocity.x = 0;
-        }
+
+void Entity::UpdateAlive() {
+    if (life < 1) {
+        isActive = false;
     }
-    
-    for (int i = 0; i < otherCount; i++) CheckCollision(&others[i]); // Checking against non-platforms
 }
 
-
-void Entity::Jump()
-{
-    if (collidedBottom)
-    {
-        if (entityType == PLAYER) velocity.y = 5.0f;
-        else velocity.y = 9.0f; // Enemies have higher jump
+void Entity::UpdateEnemy(int playerX) {
+    if (seeker) {
+        if (playerX > position.x && velocity.x < 2) velocity.x += 0.4;
+        else if (velocity.x > -2) velocity.x -= 0.4;
+    }
+    else if (boss) {
+        if (position.x > 5.0) velocity.x *= -1;
+        else if (position.x < -5) velocity.x *= -1;
     }
 }
 
 
-void Entity::Update(float deltaTime)
+void Entity::Update(float deltaTime, Entity *player, Entity *others, int otherCount)
 {
-    if (entityType == ENEMY && ID == 0) Jump(); // Jumping Enemies
-    collidedTop = false;
-    collidedBottom = false;
-    collidedLeft = false;
-    collidedRight = false;
-    
+    if (entityType == ENEMY) UpdateEnemy(player->position.x);
     velocity += acceleration * deltaTime;
     
     position.y += velocity.y * deltaTime;
-//    CheckCollisionsY(platforms, platformCount, others, otherCount);
+    CheckCollisionsY(player, others, otherCount);
+    UpdateAlive();
+
     
     position.x += velocity.x * deltaTime;
-//    CheckCollisionsX(platforms, platformCount, others, otherCount);
+    CheckCollisionsX(player, others, otherCount);
+    UpdateAlive();
 }
 
 

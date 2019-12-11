@@ -7,19 +7,19 @@
 
 #include <SDL.h>
 #include <SDL_opengl.h>
-#include <SDL_image.h>
 #include "glm/mat4x4.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "ShaderProgram.h"
 
-enum  EntityType { PLAYER, PLATFORM, ENEMY, ENEMY_BULLET, PLAYER_BULLET };
+//#include "Map.h"
+
+enum  EntityType { PLAYER, ENEMY, ENEMY_BULLET, PLAYER_BULLET, LIVES, PLATFORM };
 
 
 class Entity {
 public:
     
     EntityType entityType;
-    int ID;
     bool isStatic;
     bool isActive;
     
@@ -29,7 +29,16 @@ public:
     
     float width;
     float height;
-    float direction;
+    
+    int life;
+    int killCount;
+    
+    bool seeker;
+    bool shooter;
+    bool boss;
+    
+    float fireAccumulator;
+    float lastFire;
         
     GLuint textureID;
     
@@ -37,19 +46,14 @@ public:
     
     bool CheckCollision(Entity *other);
     
-    void CheckCollisionsX(Entity *platforms, int bulletCount, Entity *others, int otherCount);
-    void CheckCollisionsY(Entity *platforms, int bulletCount, Entity *others, int otherCount);
+    void CheckCollisionsX(Entity *player, Entity *others, int otherCount);
+    void CheckCollisionsY(Entity *player, Entity *others, int otherCount);
     
-    void Update(float deltaTime);
+    void UpdateAlive();
+    
+    void UpdateEnemy(int playerX);
+    void Update(float deltaTime, Entity *player, Entity *others, int otherCount);
     void Render(ShaderProgram *program);
-    
-    void Jump();
-    
-    bool collidedTop;
-    bool collidedBottom;
-    bool collidedLeft;
-    bool collidedRight;
-    
 };
 
 
