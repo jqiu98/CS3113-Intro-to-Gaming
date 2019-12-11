@@ -38,10 +38,6 @@ bool Entity::CheckCollision(Entity *other)
             other->life--;
             other->UpdateAlive();
         }
-        else if (entityType != other->entityType) {
-            isActive = false;
-            other->isActive = false;
-        }
         return true;
     }
     return false;
@@ -53,7 +49,7 @@ void Entity::CheckCollisionsY(Entity *player, Entity *others, int otherCount)
     {
         if (&others[i] == this) continue;
         if (CheckCollision(&others[i])) {
-            if (others[i].entityType == PLAYER_BULLET) {
+            if (others[i].entityType == PLAYER_BULLET && life == 0) {
                 player->killCount += 1;
             }
              if (entityType == others[i].entityType) {
@@ -78,7 +74,7 @@ void Entity::CheckCollisionsX(Entity *player, Entity *others, int otherCount)
     {
         if (&others[i] == this) continue;
         if (CheckCollision(&others[i])) {
-            if (others[i].entityType == PLAYER_BULLET) player->killCount += 1;
+            if (others[i].entityType == PLAYER_BULLET && life == 0) player->killCount += 1;
             if (entityType == others[i].entityType) {
                 float xdist = fabs(position.x - others[i].position.x);
                 float penetrationX = fabs(xdist - (width / 2) - (others[i].width / 2));

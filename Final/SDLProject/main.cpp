@@ -191,7 +191,6 @@ int main(int argc, char* argv[]) {
     Initialize();
     
     while (gameIsRunning) {
-//        if (currentScene->state.nextLevel >= 0) SwitchToScene(sceneList[currentScene->state.nextLevel]);
         ProcessInput();
         Update();
         Render();

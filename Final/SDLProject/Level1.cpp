@@ -1,8 +1,5 @@
 #include "Level1.h"
 
-//#define MENU_WIDTH 6
-//#define MENU_HEIGHT 2
-
 int GenRandom(int a, int b) {
     std::random_device randDev;
     std::mt19937 gen(randDev());
@@ -11,6 +8,7 @@ int GenRandom(int a, int b) {
 }
 
 void Level1::Initialize() {
+//    state.player.killCount = 49;
     enemyIndex = 0;
     pBulletIndex = 0;
     eBulletIndex = 0;
@@ -25,6 +23,7 @@ void Level1::Initialize() {
     wave = 1;
     nextSpawn = 2;
     lastSpawn = 0;
+//    tutorialDone = true;
     tutorialDone = false;
     tutorialCount = 1;
 }
@@ -99,13 +98,12 @@ void Level1::SpawnStraight() {
         toSeek = false;
         toShoot = false;
     }
-//    if (spawnCount + enemyCount > spawnMax) enemyCount = spawnMax - spawnCount;
     
-
     for (int i = 0; i < enemyCount; i++) {
         state.enemies[enemyIndex].isActive = true;
         state.enemies[enemyIndex].seeker = toSeek;
         state.enemies[enemyIndex].shooter = toShoot;
+        state.enemies[enemyIndex].life = 1;
         state.enemies[enemyIndex].position = glm::vec3(xPos, 6.25f+(i*1.5), 0);
         state.enemies[enemyIndex].velocity = glm::vec3(0, -3.0f, 0);
         enemyIndex = (enemyIndex + 1) % MAX_ENEMIES;
@@ -124,12 +122,13 @@ void Level1::SpawnVertical() {
         toSeek = false;
         toShoot = false;
     }
-//    if (spawnCount + enemyCount > spawnMax) enemyCount = spawnMax - spawnCount;
+    if (spawnCount + enemyCount > spawnMax) enemyCount = spawnMax - spawnCount;
     int xPos = GenRandom(-6.5, 6.5 - 1.5*enemyCount);
     for (int i = 0; i < enemyCount; i++) {
         state.enemies[enemyIndex].isActive = true;
         state.enemies[enemyIndex].seeker = toSeek;
         state.enemies[enemyIndex].shooter = toShoot;
+        state.enemies[enemyIndex].life = 1;
         state.enemies[enemyIndex].position = glm::vec3(xPos + i*1.5, 6.25f, 0);
         state.enemies[enemyIndex].velocity = glm::vec3(0, -3.0f, 0);
         enemyIndex = (enemyIndex + 1) % MAX_ENEMIES;
@@ -145,6 +144,7 @@ void Level1::SpawnSeek() {
     state.enemies[enemyIndex].isActive = true;
     state.enemies[enemyIndex].seeker = true;
     state.enemies[enemyIndex].shooter = false;
+    state.enemies[enemyIndex].life = 1;
     state.enemies[enemyIndex].position = glm::vec3(xPos, 6.25f, 0);
     state.enemies[enemyIndex].velocity = glm::vec3(0, -3.0f, 0);
     enemyIndex = (enemyIndex + 1) % MAX_ENEMIES;
@@ -158,6 +158,7 @@ void Level1::SpawnShoot() {
     state.enemies[enemyIndex].isActive = true;
     state.enemies[enemyIndex].seeker = false;
     state.enemies[enemyIndex].shooter = true;
+    state.enemies[enemyIndex].life = 1;
     state.enemies[enemyIndex].position = glm::vec3(xPos, 6.25f, 0);
     state.enemies[enemyIndex].velocity = glm::vec3(0, -3.0f, 0);
     enemyIndex = (enemyIndex + 1) % MAX_ENEMIES;
@@ -168,6 +169,7 @@ void Level1::SpawnMix() {
     state.enemies[enemyIndex].isActive = true;
     state.enemies[enemyIndex].seeker = true;
     state.enemies[enemyIndex].shooter = true;
+    state.enemies[enemyIndex].life = 1;
     state.enemies[enemyIndex].position = glm::vec3(xPos, 6.25f, 0);
     state.enemies[enemyIndex].velocity = glm::vec3(0, -3.0f, 0);
     enemyIndex = (enemyIndex + 1) % MAX_ENEMIES;
@@ -177,11 +179,12 @@ void Level1::SpawnBoss() {
     state.enemies[enemyIndex].isActive = true;
     state.enemies[enemyIndex].boss = true;
     state.enemies[enemyIndex].shooter = true;
+    state.enemies[enemyIndex].seeker = false;
     state.enemies[enemyIndex].life = 10;
     state.enemies[enemyIndex].width = 1.5;
     state.enemies[enemyIndex].height = 1.5;
     state.enemies[enemyIndex].position = glm::vec3(0, 4.0f, 0);
-    state.enemies[enemyIndex].velocity.x = 3;
+    state.enemies[enemyIndex].velocity = glm::vec3(3.0f, 0, 0);
     boss = true;
 }
 
@@ -191,7 +194,7 @@ void Level1::SpawnEnemies() {
         CheckClear();
         return;
     }
-    if (state.player.killCount == spawnMax) {
+    else if (state.player.killCount > spawnMax-1) {
         CheckClear();
         if (clear && !boss) SpawnBoss();
     }
@@ -248,12 +251,11 @@ void Level1::Tutorial() {
             case 7:
             case 8:
                 SpawnShoot();
-                break;
-            case 9:
                 tutorialDone = true;
                 clear = false;
                 wave = 1;
                 state.player.killCount = 0;
+                break;
         }
     }
 }
@@ -279,6 +281,7 @@ void Level1::CheckClear() {
 }
 
 void Level1::CheckGameCondition() {
+    if (tutorialDone && state.player.killCount < spawnMax) clear = false;
     if (boss) {
         if (!state.enemies[enemyIndex].isActive) {
             state.gameWon = true;
@@ -316,7 +319,6 @@ void Level1::Update(float deltaTime) {
         CheckGameCondition();
     }
 }
-
 
 
 

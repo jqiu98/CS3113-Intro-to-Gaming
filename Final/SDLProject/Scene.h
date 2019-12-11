@@ -17,7 +17,7 @@
 
 
 #define P_MAX_BULLETS 100
-#define MAX_ENEMIES 50
+#define MAX_ENEMIES 30
 #define E_MAX_BULLETS 50
 
 #define FIXED_PLAYER_FIRE_RATE 0.2f
