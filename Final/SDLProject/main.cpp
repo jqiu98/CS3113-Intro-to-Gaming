@@ -77,7 +77,7 @@ void Initialize() {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 
-    glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
     sceneList[0] = new GameMenu();
     sceneList[1] = new Level1();;
